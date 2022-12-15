@@ -1,4 +1,4 @@
-public class FIFO extends GestorDeMemoria {
+public class FIFO extends AlgoritmoDeReemplazo {
 
     int primero;
 
@@ -8,8 +8,6 @@ public class FIFO extends GestorDeMemoria {
         super();
 
         primero = 0;
-
-        mostrarIteracion(false);
     }
 
 
@@ -23,8 +21,6 @@ public class FIFO extends GestorDeMemoria {
 
             cargarEnMemoria(pagina, marco);
         }
-
-        mostrarIteracion(marco >= 0);
 
         return marco;
     }

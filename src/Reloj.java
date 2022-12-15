@@ -1,6 +1,6 @@
-public class Reloj extends GestorDeMemoria {
+public class Reloj extends AlgoritmoDeReemplazo {
 
-    int[] reloj;
+    int[] bitsDeModo;
     int puntero;
 
 
@@ -8,10 +8,13 @@ public class Reloj extends GestorDeMemoria {
     public Reloj() {
         super();
 
-        reloj = new int[numeroDeMarcos];
-        puntero = 0;
+        bitsDeModo = new int[numeroDeMarcos];
 
-        mostrarIteracion(false);
+        for(int marco = 0; marco < numeroDeMarcos; marco++) {
+            bitsDeModo[marco] = 1;
+        }
+
+        puntero = 0;
     }
 
 
@@ -20,12 +23,13 @@ public class Reloj extends GestorDeMemoria {
         int marco = calcularMarco(pagina);
 
         if(marco >= 0) {
-            reloj[marco] = 1;
+            bitsDeModo[marco] = 1;
 
             cargarEnMemoria(pagina, marco);
         }
-
-        mostrarIteracion(marco >= 0);
+        else {
+            bitsDeModo[-(marco+1)] = 1;
+        }
 
         return marco;
     }
@@ -41,31 +45,40 @@ public class Reloj extends GestorDeMemoria {
 
         marco = -1;
         while(marco == -1) {
-            if(reloj[puntero] == 0) { marco = puntero; }
-            else { reloj[puntero] = 0; }
+            if(bitsDeModo[puntero] == 0) { marco = puntero; }
+            else {
+                bitsDeModo[puntero] = 0;
+            }
+
+            puntero++;
+            if(puntero == numeroDeMarcos) { puntero = 0; }
         }
 
         return marco;
     }
 
     @Override
-    protected void mostrarIteracion(boolean falloDePagina) {
-        if(falloDePagina) {
-            System.out.println("       \t  F  ");
-        }
+    public Tabla getMemoriaFisica(boolean falloDePagina) {
+        Tabla tablaMemoriaFisica = new Tabla();
 
-        System.out.println("+-----+\t+---+");
+        tablaMemoriaFisica.anyadirColumna("Marco");
+        tablaMemoriaFisica.anyadirColumna("Página");
 
         for(int marco = 0; marco < numeroDeMarcos; marco++) {
-            System.out.println("| " + tablaDePaginas[marco][0] + " " + tablaDePaginas[marco][1] + " |\t| " + memoria[marco] + " |" + " " + reloj[marco]);
-            System.out.println("+-----+\t+---+");
+            String bitDeModo = "";
+            if(bitsDeModo[marco] == 1) { bitDeModo = "*"; }
+
+            String marcoString = "F" + marco;
+            if(puntero == marco) { marcoString = "->" + marcoString; }
+
+            tablaMemoriaFisica.anyadirEntradaAColumna("Marco", marcoString);
+            tablaMemoriaFisica.anyadirEntradaAColumna("Página", memoria[marco] + bitDeModo);
         }
 
-        for(int pagina = numeroDeMarcos; pagina < numeroDePaginas; pagina++) {
-            System.out.println("| " + tablaDePaginas[pagina][0] + " " + tablaDePaginas[pagina][1] + " |");
-            System.out.println("+-----+");
+        if(falloDePagina) {
+            tablaMemoriaFisica.anyadirEntradaAColumna("Página", "F");
         }
 
-        System.out.println("       \t     ");
+        return tablaMemoriaFisica;
     }
 }

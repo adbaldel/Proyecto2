@@ -1,4 +1,4 @@
-public class LRU extends GestorDeMemoria {
+public class LRU extends AlgoritmoDeReemplazo {
 
     int[] tiempoSinUsar;
 
@@ -12,14 +12,16 @@ public class LRU extends GestorDeMemoria {
         tiempoSinUsar[1] = 2;
         tiempoSinUsar[2] = 1;
         tiempoSinUsar[3] = 0;
-
-        mostrarIteracion(false);
     }
 
 
 
     public int iterar(int pagina) {
         int marco = calcularMarco(pagina);
+
+        for(int i = 1; i < numeroDeMarcos; i++) {
+            tiempoSinUsar[i]++;
+        }
 
         if(marco >= 0) {
             tiempoSinUsar[marco] = 0;
@@ -31,8 +33,9 @@ public class LRU extends GestorDeMemoria {
 
             cargarEnMemoria(pagina, marco);
         }
-
-        mostrarIteracion(marco >= 0);
+        else {
+            tiempoSinUsar[-(marco+1)] = 0;
+        }
 
         return marco;
     }

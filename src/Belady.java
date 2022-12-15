@@ -1,4 +1,4 @@
-public class Belady extends GestorDeMemoria {
+public class Belady extends AlgoritmoDeReemplazo {
 
     int[] secuenciaDePaginas;
     int paginasRecorridas;
@@ -10,8 +10,6 @@ public class Belady extends GestorDeMemoria {
 
         this.secuenciaDePaginas = secuenciaDePaginas;
         paginasRecorridas = 0;
-
-        mostrarIteracion(false);
     }
 
 
@@ -19,11 +17,11 @@ public class Belady extends GestorDeMemoria {
     public int iterar(int pagina) {
         int marco = calcularMarco(pagina);
 
+        paginasRecorridas++;
+
         if(marco >= 0) {
             cargarEnMemoria(pagina, marco);
         }
-
-        mostrarIteracion(marco >= 0);
 
         return marco;
     }
@@ -40,7 +38,7 @@ public class Belady extends GestorDeMemoria {
 
         for(int marco = 0; marco < numeroDeMarcos; marco++) {
             for(int i = paginasRecorridas+1; i < secuenciaDePaginas.length; i++) {
-                if(secuenciaDePaginas[i] != pagina) { tiemposHastaReferencia[marco]++; }
+                if(secuenciaDePaginas[i] != memoria[marco]) { tiemposHastaReferencia[marco]++; }
                 else { break; }
             }
         }
